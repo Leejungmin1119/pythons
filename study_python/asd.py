@@ -1,56 +1,23 @@
-from collections import deque
 import sys
+input = sys.stdin.readline
 
-#BFS
-def BFS():
+n = int(input())
 
-    global M,N
+stars = [[' ']*2*n for _ in range(n)]
+
+def recursion(i, j, size):
+    if size == 3:
+        stars[i][j] = '*'
+        stars[i + 1][j - 1] = stars[i + 1][j + 1] = "*"
+        for k in range(-2, 3):
+            stars[i + 2][j - k] = "*"
     
-    deques = deque((index))
+    else:
+        newSize = size//2
+        recursion(i, j, newSize)
+        recursion(i + newSize, j - newSize, newSize)
+        recursion(i + newSize, j + newSize, newSize)
 
-    roop_depend = []
-
-    while deques:
-        
-        ch = deques.popleft()
-
-        for i in range(4):
-                
-            value = ch_list[ch[0]][ch[1]]
-            ch_x,ch_y = position[i][1]+ch[1],position[i][0] + ch[0]
-            
-            if (0 <= ch_x < M )and (0 <= ch_y < N):
-
-
-                if (ch_list[ch_y][ch_x]) == 0 or (value +1 < ch_list[ch_y][ch_x]):
-
-                    deques.append((ch_y,ch_x))  
-
-                    ch_list[ch_y][ch_x] = value + 1
-                        
-
-position = [[0,1],[0,-1],[1,0],[-1,0]]
-M,N = map(int,sys.stdin.readline().split()) # x,y
-
-lists = [list(map(int,sys.stdin.readline().split())) for i in range(N)]
-
-ch_list = lists
-
-index = []
-for i in range(N):
-    for j in range(M):
-
-        if lists[i][j] == 1:
-
-            index.append([i,j])
-
-BFS()
-
-for i in ch_list:
-
-    if 0 in i:
-        print(-1)
-        break
-
-else:
-    print(max( max(i) for i in ch_list) -1)
+recursion(0, n - 1, n)
+for star in stars:
+    print("".join(star))
