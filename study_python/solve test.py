@@ -1,12 +1,22 @@
-def hanoi_tower(n, start, end) :
-    if n == 1 :
-        print(start, end)
-        return
+import sys
+input = sys.stdin.readline
 
-    hanoi_tower(n-1, start, 6-start-end) # 1단계
-    print(start, end) # 2단계
-    hanoi_tower(n-1, 6-start-end, end) # 3단계
-    
-n = int(input())
-print(2**n-1)
-hanoi_tower(n, 1, 3)
+n, m = map(int, input().split())
+knowList = set(input().split()[1:])
+parties = []
+
+for _ in range(m):
+    parties.append(set(input().split()[1:]))
+
+for _ in range(m):
+    for party in parties:
+        if party & knowList:
+            knowList = knowList.union(party)
+
+cnt = 0
+for party in parties:
+    if party & knowList:
+        continue
+    cnt += 1
+
+print(cnt)

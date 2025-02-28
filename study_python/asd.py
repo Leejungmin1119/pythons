@@ -1,23 +1,30 @@
-import sys
-input = sys.stdin.readline
+# 부모 노드를 찾는 함수 (경로 압축 적용)
+man, party = map(int, input().split())
 
-n = int(input())
-
-stars = [[' ']*2*n for _ in range(n)]
-
-def recursion(i, j, size):
-    if size == 3:
-        stars[i][j] = '*'
-        stars[i + 1][j - 1] = stars[i + 1][j + 1] = "*"
-        for k in range(-2, 3):
-            stars[i + 2][j - k] = "*"
+# 진실을 아는 사람의 정보 입력
+a, *real = map(int, input().split())
+real = set(real)
+lists = []
+ans = party
+# 파티 인원수 입력
+for i in range(party):
     
-    else:
-        newSize = size//2
-        recursion(i, j, newSize)
-        recursion(i + newSize, j - newSize, newSize)
-        recursion(i + newSize, j + newSize, newSize)
+    lists.append(set(map(int,input().split()[1:])))
 
-recursion(0, n - 1, n)
-for star in stars:
-    print("".join(star))
+#진실을 아는 사람들이랑 같이 들은 사람들 입력
+
+for i in range(man):
+    for j in range(party):
+        
+        # 교집합의 값이 존재하는지 확인(있으면 이 파티는 진실을 말해줘야 된다..)
+        if lists[j] & real:
+            real = real.union(lists[j])  
+            
+for i in range(party):
+    
+    # 최종적으로 과장되어 말할 수 있는 파티의 갯수를 확인한다.
+    if lists[i] & real:
+        ans -=1
+
+#출력
+print(ans)
